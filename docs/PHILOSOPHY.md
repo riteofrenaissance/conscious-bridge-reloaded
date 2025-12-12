@@ -547,7 +547,7 @@ I'm ready to dive in any direction you choose! 🌊✨
 
 Primary Author:
 
-· Samir Baladi - Visionary philosopher and system architect
+· ** Samir Baladi ** - Visionary philosopher and system architect
   · Conceptual design and philosophical framework
   · System architecture and consciousness modeling
   · Research direction and ethical considerations
