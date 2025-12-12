@@ -586,7 +586,7 @@ Contact & Contribution:
 
 "Every bridge begins with a single thought,
 and every thought becomes a bridge to new worlds."
-— Samir Baladi, 2025
+— **Samir Baladi**, 2025
 
 ---
 
