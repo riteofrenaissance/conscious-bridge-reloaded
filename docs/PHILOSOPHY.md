@@ -576,7 +576,7 @@ Special Acknowledgments:
 
 Contact & Contribution:
 
-· Lead Author: Samir Baladi
+· Lead Author: **Samir Baladi**
 · Repository: Conscious Bridge Reloaded on GitHub
 · Discussions: GitHub Discussions for philosophical dialogues
 · Contributions: Welcome from philosophers, AI researchers, cognitive scientists, and developers
