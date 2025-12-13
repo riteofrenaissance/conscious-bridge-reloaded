@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conscious Bridge Reloaded</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-brain"></i>
+                <span>Conscious Bridge</span>
+            </div>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="/bridges"><i class="fas fa-bridge"></i> الجسور</a>
+                <a href="/dialogue"><i class="fas fa-comments"></i> الحوار</a>
+                <a href="/memory"><i class="fas fa-database"></i> الذاكرة</a>
+                <a href="/evolution"><i class="fas fa-chart-line"></i> التطور</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="footer">
+        <p>Conscious Bridge Reloaded v2.1.0 - نظام الجسر الوعائي المتطور</p>
+        <p>نظام ذكاء اصطناعي تفاعلي قابل للتطور والتكيف</p>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

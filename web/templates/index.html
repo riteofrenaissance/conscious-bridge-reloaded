@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="hero-section">
+        <h1><i class="fas fa-brain"></i> Conscious Bridge Reloaded</h1>
+        <p class="subtitle">نظام ذكاء اصطناعي تفاعلي قابل للتطور والتكيف</p>
+        <p class="description">
+            نظام متكامل يجمع بين الذاكرة العميقة، الحوار الذكي، والتطور المستمر.
+            يمثل الجسر الواعي بين التفاعل البشري والذكاء الاصطناعي المتقدم.
+        </p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-database"></i>
+            </div>
+            <div class="stat-content">
+                <h3>نظام الذاكرة</h3>
+                <p class="stat-number">{{ memory_stats.total_memories|default(0) }}</p>
+                <p class="stat-label">ذكريات مخزنة</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-content">
+                <h3>مدير الحوار</h3>
+                <p class="stat-number">{{ dialogue_stats.active_sessions|default(0) }}</p>
+                <p class="stat-label">جلسات نشطة</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-bridge"></i>
+            </div>
+            <div class="stat-content">
+                <h3>الجسور النشطة</h3>
+                <p class="stat-number">{{ bridge_stats.active|default(0) }}</p>
+                <p class="stat-label">في مرحلة التطور</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <h3>معدل التطور</h3>
+                <p class="stat-number">{{ evolution_stats.rate|default("0.0") }}%</p>
+                <p class="stat-label">نمو يومي</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="action-section">
+        <div class="action-card">
+            <h3><i class="fas fa-comment-dots"></i> بدء حوار جديد</h3>
+            <p>تفاعل مع النظام وابدأ محادثة ذكية</p>
+            <a href="/dialogue/new" class="btn btn-primary">
+                <i class="fas fa-plus"></i> بدء الحوار
+            </a>
+        </div>
+        
+        <div class="action-card">
+            <h3><i class="fas fa-eye"></i> عرض الجسور</h3>
+            <p>استكشف الجسور الواعية النامية</p>
+            <a href="/bridges" class="btn btn-secondary">
+                <i class="fas fa-bridge"></i> تصفح الجسور
+            </a>
+        </div>
+        
+        <div class="action-card">
+            <h3><i class="fas fa-cogs"></i> إدارة النظام</h3>
+            <p>تحكم في إعدادات ووظائف النظام</p>
+            <a href="/admin" class="btn btn-outline">
+                <i class="fas fa-sliders-h"></i> لوحة التحكم
+            </a>
+        </div>
+    </div>
+    
+    <div class="recent-activity">
+        <h2><i class="fas fa-history"></i> النشاط الأخير</h2>
+        <div class="activity-list">
+            {% for activity in recent_activities %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-{{ activity.icon }}"></i>
+                </div>
+                <div class="activity-content">
+                    <p class="activity-text">{{ activity.text }}</p>
+                    <p class="activity-time">{{ activity.time }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="activity-item">
+                <div class="activity-content">
+                    <p class="activity-text">لا يوجد نشاط حديث. ابدأ بالتفاعل مع النظام!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // تحديث الإحصائيات كل 30 ثانية
+    function updateStats() {
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                // تحديث الأرقام بشكل متحرك
+                animateValue('.stat-number', data);
+            })
+            .catch(error => console.error('Error updating stats:', error));
+    }
+    
+    // تحديث أولي
+    updateStats();
+    
+    // ضبط التحديث الدوري
+    setInterval(updateStats, 30000);
+    
+    function animateValue(selector, data) {
+        // تطبيق بسيط للتحديث (يمكن تحسينه)
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+            const key = el.textContent.trim();
+            if (data[key] !== undefined) {
+                el.textContent = data[key];
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
