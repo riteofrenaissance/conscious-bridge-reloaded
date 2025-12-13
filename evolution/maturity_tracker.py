@@ -1,4 +1,5 @@
 
+import random
     # ========== نظام المكافآت للتطور ==========
     
     class DevelopmentRewards:
