@@ -1,0 +1,4 @@
+CONSCIOUS_BRIDGE_RELOADED_VERSION=2.1.0
+BUILD_DATE=$(date +%Y-%m-%d)
+GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+PYTHON_REQUIRED=3.8+
