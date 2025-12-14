@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  conscious-bridge:
+    build: .
+    container_name: conscious-bridge-reloaded
+    ports:
+      - "5000:5000"
+    environment:
+      - DEBUG=False
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    restart: unless-stopped
+    networks:
+      - bridge-network
+
+  # خدمة قاعدة بيانات (اختيارية)
+  db:
+    image: sqlite:latest
+    container_name: conscious-bridge-db
+    volumes:
+      - ./data/db:/data
+    networks:
+      - bridge-network
+
+networks:
+  bridge-network:
+    driver: bridge
