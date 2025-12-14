@@ -2538,3 +2538,70 @@ class AdvancedAnalytics:
             "timestamp": datetime.datetime.now().isoformat()
         }
 
+
+# ========== نظام المراقبة والإنذارات ==========
+
+import datetime
+
+class MonitoringSystem:
+    """نظام مراقبة وإنذارات ذكي"""
+    
+    def __init__(self):
+        self.alerts = []
+        self.metrics = {}
+        
+    def monitor_metric(self, name, value, threshold=0.8):
+        """مراقبة مقياس معين"""
+        self.metrics[name] = value
+        
+        if value > threshold:
+            alert = {
+                "name": name,
+                "value": value,
+                "threshold": threshold,
+                "timestamp": datetime.datetime.now().isoformat(),
+                "severity": "high" if value > 0.9 else "medium"
+            }
+            self.alerts.append(alert)
+            return {"alert_triggered": True, **alert}
+        
+        return {"status": "normal", "value": value}
+    
+    def get_alerts_summary(self):
+        """الحصول على ملخص الإنذارات"""
+        return {
+            "total_alerts": len(self.alerts),
+            "active_alerts": self.alerts[-5:] if self.alerts else [],
+            "metrics_monitored": list(self.metrics.keys())
+        }
+
+
+# ========== نظام التوثيق التلقائي ==========
+
+class AutoDocumenter:
+    """نظام توثيق تلقائي للأكواد"""
+    
+    def __init__(self):
+        self.documented_classes = []
+        
+    def document_class(self, class_obj):
+        """توثيق كلاس تلقائياً"""
+        class_name = class_obj.__class__.__name__
+        
+        documentation = {
+            "class_name": class_name,
+            "methods": [method for method in dir(class_obj) if not method.startswith('_')],
+            "documented_at": datetime.datetime.now().isoformat()
+        }
+        
+        self.documented_classes.append(documentation)
+        return documentation
+    
+    def generate_report(self):
+        """توليد تقرير التوثيق"""
+        return {
+            "total_classes": len(self.documented_classes),
+            "documented_classes": self.documented_classes[-10:],
+            "report_generated": datetime.datetime.now().isoformat()
+        }
+
