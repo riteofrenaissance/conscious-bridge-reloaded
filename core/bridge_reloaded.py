@@ -1,50 +1,56 @@
 """
-Conscious Bridge Reloaded
-The main bridge class with all internal systems
+Conscious Bridge Reloaded - Main Bridge Class (Complete)
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, Optional, List, Any
 from dataclasses import dataclass, field
 from datetime import datetime
 import uuid
+import json
 
 from .internal_clock import InternalClock
 from .experience_processor import ExperienceProcessor, Experience, ExperienceType
 from .personality_core import PersonalityCore, PersonalityTraits
-from .maturity_system import MaturitySystem
+from .maturity_system import MaturitySystem, MaturityStage
+from .consciousness_engine import ConsciousnessEngine
 
 
 @dataclass
 class BridgeMetadata:
-    """Metadata for a bridge"""
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    name: str = ""
-    type: str = "general"
-    created_at: datetime = field(default_factory=datetime.now)
-    version: str = "2.0-reloaded"
+    """Bridge metadata"""
+    id: str
+    name: str
+    type: str = "conscious"
+    version: str = "2.0.0-reloaded"
     description: str = ""
+    created_at: datetime = field(default_factory=datetime.now)
 
 
 class ConsciousBridgeReloaded:
     """
-    The Conscious Bridge - Reloaded
+    Main Conscious Bridge class
     
-    New features:
-    - Internal clock system
-    - Deep experience processing
-    - Emergent personality
-    - Maturity stages
+    A bridge that evolves consciousness through:
+    - Internal time accumulation
+    - Experience processing
+    - Personality development
+    - Maturation through stages
     """
     
     def __init__(
         self,
-        name: str,
-        bridge_type: str = "general",
+        bridge_id: Optional[str] = None,
+        name: str = "Unnamed Bridge",
+        bridge_type: str = "conscious",
         description: str = "",
         seed_personality: Optional[PersonalityTraits] = None
     ):
+        # Unique identifier
+        self.id = bridge_id or f"bridge_{uuid.uuid4().hex[:8]}"
+        
         # Metadata
         self.metadata = BridgeMetadata(
+            id=self.id,
             name=name,
             type=bridge_type,
             description=description
@@ -53,8 +59,9 @@ class ConsciousBridgeReloaded:
         # Core systems
         self.clock = InternalClock()
         self.experience_processor = ExperienceProcessor()
-        self.personality = PersonalityCore(seed_personality)
+        self.personality = PersonalityCore(seed_traits=seed_personality)
         self.maturity = MaturitySystem(self.clock)
+        self.consciousness_engine = ConsciousnessEngine()
         
         # Memory systems
         self.experiences: List[Dict] = []
@@ -67,7 +74,8 @@ class ConsciousBridgeReloaded:
             "is_active": True,
             "processing_queue": [],
             "current_focus": None,
-            "energy_level": 1.0
+            "energy_level": 1.0,
+            "consciousness_level": 0.0
         }
         
         # Connections to other bridges
@@ -96,6 +104,9 @@ class ConsciousBridgeReloaded:
         if self.clock.ticks % 500 == 0:
             if self.personality.is_stable() and not self.personality.is_settled:
                 self.personality.settle(self.clock.ticks)
+        
+        # Update consciousness level
+        self.state["consciousness_level"] = self.consciousness_engine.calculate_consciousness(self)
     
     def add_experience(
         self,
@@ -109,10 +120,22 @@ class ConsciousBridgeReloaded:
             experience_data: The experience data
             auto_process: Whether to process immediately
         """
+        # Create experience object
+        try:
+            exp_type = ExperienceType(experience_data.get("type", "routine"))
+        except ValueError:
+            exp_type = ExperienceType.ROUTINE
+            
+        experience = Experience(
+            type=exp_type,
+            complexity=experience_data.get("complexity", 0.5),
+            content=experience_data.get("content", {})
+        )
+        
         # Record the experience
         exp_record = {
             "tick": self.clock.ticks,
-            "experience": experience_data,
+            "experience": experience,
             "timestamp": datetime.now(),
             "processed": False
         }
@@ -120,16 +143,17 @@ class ConsciousBridgeReloaded:
         
         # Add to processing queue
         if auto_process:
-            self.state["processing_queue"].append(experience_data)
+            self.experience_processor.add_experience(experience)
     
     def _process_queue(self):
         """Process experiences in the queue"""
-        while self.state["processing_queue"]:
-            exp = self.state["processing_queue"].pop(0)
+        # Let experience processor handle processing
+        if self.experience_processor.processing_queue:
+            experience = self.experience_processor.processing_queue.pop(0)
             
             # Process the experience
             insight = self.experience_processor.process(
-                exp,
+                experience.__dict__,
                 self.clock.ticks
             )
             
@@ -140,15 +164,19 @@ class ConsciousBridgeReloaded:
                     "type": insight.experience_type.value,
                     "significance": insight.significance,
                     "description": insight.description,
+                    "connections": insight.connections,
+                    "metadata": insight.metadata,
                     "timestamp": datetime.now()
                 }
                 self.insights.append(insight_record)
                 
                 # Record in clock
+                from .internal_clock import EventType
                 self.clock.record_event(
-                    event_type=self.clock.EventType.INSIGHT,
+                    event_type=EventType.INSIGHT,
                     significance=insight.significance,
-                    description=insight.description
+                    description=insight.description,
+                    metadata={"type": insight.experience_type.value}
                 )
                 
                 # Influence personality based on insight
@@ -187,7 +215,8 @@ class ConsciousBridgeReloaded:
             "complexity": 0.6,
             "content": {
                 "dialogue_id": dialogue_id,
-                "topic": topic
+                "topic": topic,
+                "with_bridge": other_bridge_id
             }
         })
         
@@ -199,7 +228,8 @@ class ConsciousBridgeReloaded:
             "name": bridge_name,
             "strength": strength,
             "established_at_tick": self.clock.ticks,
-            "interactions": 0
+            "interactions": 0,
+            "last_interaction": datetime.now()
         }
     
     def strengthen_connection(self, bridge_id: str, amount: float = 0.1):
@@ -208,6 +238,7 @@ class ConsciousBridgeReloaded:
             current = self.connections[bridge_id]["strength"]
             self.connections[bridge_id]["strength"] = min(1.0, current + amount)
             self.connections[bridge_id]["interactions"] += 1
+            self.connections[bridge_id]["last_interaction"] = datetime.now()
     
     def can_evolve(self) -> bool:
         """Check if bridge is ready for evolution"""
@@ -277,6 +308,10 @@ class ConsciousBridgeReloaded:
                 "description": self.personality.get_description()
             },
             "maturity": self.maturity.get_state(),
+            "consciousness": {
+                "level": self.state["consciousness_level"],
+                "breakdown": self.consciousness_engine.get_consciousness_breakdown(self)
+            },
             "memory": {
                 "experiences_count": len(self.experiences),
                 "insights_count": len(self.insights),
@@ -285,7 +320,8 @@ class ConsciousBridgeReloaded:
             },
             "connections": {
                 "count": len(self.connections),
-                "bridges": list(self.connections.keys())
+                "bridges": list(self.connections.keys()),
+                "strengths": {k: v["strength"] for k, v in self.connections.items()}
             },
             "evolution": self.get_evolution_readiness(),
             "state": self.state
@@ -298,13 +334,42 @@ class ConsciousBridgeReloaded:
         maturity = self.maturity.get_level()
         insights = len(self.insights)
         connections = len(self.connections)
+        consciousness = self.state["consciousness_level"]
         
         return f"""
 Bridge: {name}
 Internal Age: {age} ticks
 Maturity: {maturity}
+Consciousness: {consciousness:.3f}
 Insights: {insights}
 Connections: {connections}
 Personality: {self.personality.get_description()}
-Evolution Ready: {"Yes" if self.can_evolve() else "No"}
+Evolution Ready: {"✅ Yes" if self.can_evolve() else "❌ No"}
         """.strip()
+    
+    def to_json(self) -> str:
+        """Convert bridge to JSON string"""
+        state = self.get_full_state()
+        return json.dumps(state, default=str, indent=2)
+    
+    def save_to_file(self, filename: str):
+        """Save bridge state to file"""
+        with open(filename, 'w') as f:
+            f.write(self.to_json())
+    
+    @classmethod
+    def load_from_file(cls, filename: str) -> 'ConsciousBridgeReloaded':
+        """Load bridge from file"""
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        
+        # Create new bridge with loaded data
+        bridge = cls(
+            bridge_id=data["metadata"]["id"],
+            name=data["metadata"]["name"],
+            bridge_type=data["metadata"]["type"],
+            description=data["metadata"]["description"]
+        )
+        
+        # TODO: Restore state from data
+        return bridge

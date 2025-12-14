@@ -1,30 +1,17 @@
 """
-Dialogue System Package - نظام الحوار التفاعلي
+Dialogue module for Conscious Bridge Reloaded
+Handles communication between bridges
 """
 
-from .dialogue_manager import DialogueManager, DialogueSession, DialogueTurn, dialogue_manager
-from .response_generator import ResponseGenerator, response_generator
-from .emotion_analyzer import EmotionAnalyzer, emotion_analyzer
-from .dialogue_analyzer import DialogueAnalyzer, dialogue_analyzer
+from .dialogue_engine import DialogueEngine, Dialogue, DialogueMessage
+from .conversation_analyzer import ConversationAnalyzer
+from .semantic_bridge import SemanticBridge, SemanticConnection
 
 __all__ = [
-    # Dialogue Manager
-    'DialogueManager',
-    'DialogueSession', 
-    'DialogueTurn',
-    'dialogue_manager',
-    
-    # Response Generator
-    'ResponseGenerator',
-    'response_generator',
-    
-    # Emotion Analyzer
-    'EmotionAnalyzer',
-    'emotion_analyzer',
-    
-    # Dialogue Analyzer
-    'DialogueAnalyzer',
-    'dialogue_analyzer'
+    'DialogueEngine',
+    'Dialogue',
+    'DialogueMessage',
+    'ConversationAnalyzer',
+    'SemanticBridge',
+    'SemanticConnection'
 ]
-
-__version__ = '2.1.0'

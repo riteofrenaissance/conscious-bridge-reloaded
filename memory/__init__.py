@@ -1,33 +1,10 @@
 """
-Memory System Package - نظام الذاكرة المتكامل
+Memory module for Conscious Bridge Reloaded
+Handles long-term storage and retrieval of experiences and insights
 """
 
-from .deep_memory import DeepMemory, MemoryEntry, MemoryType, MemoryPriority, memory_system
-from .experience_store import ExperienceStore, experience_store
-from .insight_tracker import InsightTracker, Insight, insight_tracker
-from .consolidation_engine import ConsolidationEngine, MemoryCluster, consolidation_engine
+from .deep_memory import DeepMemory
+from .experience_store import ExperienceStore
+from .insight_tracker import InsightTracker
 
-__all__ = [
-    # Deep Memory
-    'DeepMemory',
-    'MemoryEntry', 
-    'MemoryType',
-    'MemoryPriority',
-    'memory_system',
-    
-    # Experience Store
-    'ExperienceStore',
-    'experience_store',
-    
-    # Insight Tracker
-    'InsightTracker',
-    'Insight', 
-    'insight_tracker',
-    
-    # Consolidation Engine
-    'ConsolidationEngine',
-    'MemoryCluster',
-    'consolidation_engine'
-]
-
-__version__ = '2.1.0'
+__all__ = ['DeepMemory', 'ExperienceStore', 'InsightTracker']
