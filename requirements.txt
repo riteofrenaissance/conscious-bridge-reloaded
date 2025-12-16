@@ -1,58 +1,10 @@
-# Conscious Bridge Reloaded v2.1.0
-# المتطلبات الأساسية
-
-# الويب وAPI
-Flask==2.3.3
-Flask-CORS==4.0.0
-Werkzeug==2.3.7
-
-# قواعد البيانات
-SQLAlchemy==2.0.19
-alembic==1.12.0
-
-# البيانات والتحليل
-numpy==1.24.3
-pandas==2.0.3
-scipy==1.11.1
-
-# التواريخ والأوقات
-python-dateutil==2.8.2
-pytz==2023.3
-
-# الإعدادات والبيئة
-python-dotenv==1.0.0
-pyyaml==6.0
-
-# التسجيل
-loguru==0.7.2
-
-# الأدوات المساعدة
-click==8.1.6
-colorama==0.4.6
-tqdm==4.65.0
-
-# التطوير والاختبار
-pytest==7.4.2
-pytest-cov==4.1.0
-black==23.7.0
-flake8==6.1.0
-
-# الأمان
-bcrypt==4.0.1
-cryptography==41.0.3
-
-# الشبكات
+# Basic requirements for Conscious Bridge
+Flask==2.3.0
+Werkzeug==2.3.0
+Jinja2==3.1.2
 requests==2.31.0
-websockets==12.0
-
-# التوثيق التلقائي
-sphinx==7.2.6
-sphinx-rtd-theme==1.3.0
-
-# الأنظمة التطورية (مخصص)
-consciousness-simulator>=0.1.0
-quantum-integration>=0.1.0
-advanced-analytics>=0.1.0
-
-# التوافق
-typing-extensions==4.7.1
+python-dotenv==1.0.0
+# Development
+pytest==7.4.0
+flake8==6.1.0
+black==23.7.0
