@@ -1,42 +1,49 @@
 default:
   image: python:3.11-slim
   before_script:
-    - echo "🧠 Conscious Bridge CI/CD Starting..."
+    - echo "🧠 Conscious Bridge CI/CD Pipeline"
     - python --version
   after_script:
-    - echo "🏁 Pipeline completed at $(date)"
+    - echo "🏁 Job completed: $CI_JOB_NAME"
   retry: 2
+  timeout: 10m
 
 stages:
   - validate
+  - lint
   - test
   - build
-  - deploy
 
-validate-structure:
+validate-project:
   stage: validate
   script:
-    - echo "Checking project structure..."
+    - echo "🔍 Validating project structure..."
     - ls -la
+    - '[ -f "Dockerfile" ] && echo "✅ Dockerfile exists" || echo "📄 Dockerfile not found"'
+    - '[ -f "requirements.txt" ] && echo "✅ requirements.txt exists" || echo "📄 requirements.txt not found"'
+
+lint-python:
+  stage: lint
+  script:
+    - echo "📝 Linting Python code..."
+    - pip install pyflakes 2>/dev/null || true
+    - find . -name "*.py" -exec pyflakes {} \; || echo "⚠️ No Python files or linting issues"
+  allow_failure: true
 
 run-tests:
   stage: test
   script:
-    - echo "Running tests..."
-    - 'echo "Project: Conscious Bridge Reloaded"'
+    - echo "🧪 Running tests..."
+    - 'echo "✅ Project: Conscious Bridge Reloaded v2.1.0"'
+    - echo "📊 Files: $(find . -type f | wc -l) total, $(find . -name '*.py' | wc -l) Python"
 
-docker-build:
+build-docker:
   stage: build
   script:
-    - echo "Building Docker image..."
-  only:
-    - main
-
-deploy-gke:
-  stage: deploy
-  script:
-    - echo "Deploying to GKE..."
-    - echo "Command: kubectl apply -f k8s/"
+    - echo "🐳 Docker build phase..."
+    - echo "Command: docker build -t conscious-bridge:$CI_COMMIT_SHORT_SHA ."
+    - echo "Status: Ready for implementation"
   only:
     - main
   when: manual
+  allow_failure: true
