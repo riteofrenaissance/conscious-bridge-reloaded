@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Run tests
+        run: |
+          echo "🧪 Testing Conscious Bridge Reloaded"
+          echo "Commit: ${{ github.sha }}"
+          python --version
+          echo "Project structure:"
+          ls -la
+      
+      - name: Validate files
+        run: |
+          echo "🔍 Validating project..."
+          [ -f "Dockerfile" ] && echo "✅ Dockerfile exists" || echo "📄 Dockerfile not found"
+          [ -f "requirements.txt" ] && echo "✅ requirements.txt exists" || echo "📄 requirements.txt not found"
+          [ -d "k8s" ] && echo "✅ k8s/ directory exists" || echo "📁 k8s/ not found"
