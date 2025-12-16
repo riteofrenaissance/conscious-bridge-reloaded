@@ -1,71 +1,61 @@
-# Contributing to Conscious Bridge Reloaded
+# Contributing to Conscious Bridge Reloaded v2.1.0
 
-## How to Contribute
-1. Fork this repository
-2. Create a new branch
-3. Make your changes
-4. Submit a Pull Request
-
-## Development Setup
-```bash
-git clone https://github.com/YOUR_USERNAME/conscious-bridge-reloaded.git
-cd conscious-bridge-reloaded
-pip install -r requirements.txt
+## Project Architecture
 ```
 
-Code Standards
-
-· Follow existing code style
-· Add tests for new features
-· Update documentation
-· Use meaningful commit messages
-
-Pull Request Process
-
-· Ensure all tests pass
-· Update relevant documentation
-· Request review from maintainers
-· Address feedback promptly
-
-Getting Help
-
-· Check existing documentation
-· Search GitHub issues
-· Contact maintainers for questions
-
-Code Structure
-
-```
 conscious-bridge-reloaded/
-├── core/           # Core consciousness simulation
-├── evolution/      # Evolutionary systems
-├── api/           # API endpoints
-├── memory/        # Memory systems
-├── cli/           # Command-line interface
-├── tests/         # Test suites
-└── docs/          # Documentation
+├──📦 conscious_bridge_reloaded_pkg/
+│├── server.py
+│├── cli.py
+│└── internal_clock.py
+│
+├──🧠 core/
+│├── bridge_reloaded.py
+│├── personality_core.py
+│└── maturity_system.py
+│
+├──🔌 api/
+│└── endpoints/
+│
+├──💾 memory/
+│├── experience_store.py
+│└── insight_manager.py
+│
+├──🧪 tests/
+│├── test_bridge.py
+│├── test_evolution.py
+│└── test_integration.py
+│
+└──📖 docs/
+├── API.md
+├── ARCHITECTURE.md
+└── EVOLUTION_GUIDE.md
+
 ```
 
-Module Guidelines
+## Development Workflow
+1. Fork the repository
+2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/conscious-bridge-reloaded.git`
+3. Create feature branch: `git checkout -b feature/your-feature`
+4. Install dependencies: `pip install -r requirements.txt`
+5. Make changes following architecture patterns
+6. Test changes: `pytest tests/`
+7. Commit: `git commit -m "type: description"`
+8. Push: `git push origin feature/your-feature`
+9. Open Pull Request
 
-· Core: Extend bridge_reloaded.py for new features
-· API: Add RESTful endpoints in api/endpoints/
-· Memory: Implement data persistence patterns
-· Tests: Cover all new functionality
+## Code Standards
+- Follow PEP 8 with Black formatting
+- Use type hints for all functions
+- Maintain modular architecture
+- Update relevant documentation
+- Add tests for new features
 
-Testing
+## Module Guidelines
+- Core: Extend consciousness features in bridge_reloaded.py
+- API: Add RESTful endpoints in api/endpoints/
+- Memory: Implement data persistence patterns
+- Tests: Cover all new functionality
 
-```bash
-pytest tests/ -v
-python scripts/health_check.py
-```
-
-Documentation
-
-· Update API.md for endpoint changes
-· Update ARCHITECTURE.md for structural changes
-· Include examples for complex features
-
-Questions?
-
-Open an issue with specific questions.
+## Questions?
+Open an issue with specific questions about architecture or implementation.
