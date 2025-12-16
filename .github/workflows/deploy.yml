@@ -1,0 +1,48 @@
+name: Deploy to GKE
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  DEPLOYMENT_NAME: conscious-bridge-reloaded
+
+jobs:
+  setup-build-publish-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Configure Docker
+      run: |
+        echo "🐳 Setting up Docker..."
+        docker version
+    
+    - name: Build Docker image
+      run: |
+        echo "🏗️ Building image..."
+        docker build -t conscious-bridge:${{ github.sha }} .
+        echo "✅ Image built: conscious-bridge:${{ github.sha }}"
+    
+    - name: Test Deployment Files
+      run: |
+        echo "📋 Testing Kubernetes manifests..."
+        kubectl apply -f k8s/ --dry-run=client
+        echo "✅ Manifests are valid"
+    
+    - name: Simulation Output
+      run: |
+        echo "🚀 SIMULATION: Ready to deploy to GKE"
+        echo "Cluster: $GKE_CLUSTER"
+        echo "Zone: $GKE_ZONE"
+        echo "Project: $PROJECT_ID"
+        echo ""
+        echo "Actual deployment requires:"
+        echo "1. GCP Service Account Key in GitHub Secrets"
+        echo "2. GKE cluster created"
+        echo "3. Uncomment auth steps in workflow"
