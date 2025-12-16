@@ -1,0 +1,443 @@
+
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكي الجسر الواعي - Conscious Bridge Simulator</title>
+    <meta name="description" content="محاكاة تفاعلية لنظام الوعي الاصطناعي - Conscious Bridge Law v2.1.0">
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (من CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        #root {
+            min-height: 100vh;
+        }
+        
+        /* RTL Support */
+        [dir="rtl"] {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        // Lucide Icons Components (manual imports from global)
+        const PlayIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="play"></i>;
+        };
+        
+        const PauseIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="pause"></i>;
+        };
+        
+        const RotateCcwIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="rotate-ccw"></i>;
+        };
+        
+        const LightbulbIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="lightbulb"></i>;
+        };
+        
+        const ClockIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="clock"></i>;
+        };
+        
+        const BrainIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="brain"></i>;
+        };
+        
+        const HeartIcon = () => {
+            useEffect(() => { lucide.createIcons(); }, []);
+            return <i data-lucide="heart"></i>;
+        };
+
+        const ConsciousBridgeSimulator = () => {
+          // Bridge State
+          const [bridge, setBridge] = useState({
+            id: 'bridge_001',
+            name: 'الباحث الأول',
+            type: 'philosophical',
+            ticks: 0,
+            awareness: 0,
+            maturity: 'nascent',
+            personality: {
+              curiosity: 0.5,
+              stability: 0.5,
+              openness: 0.5,
+              collaboration: 0.5
+            },
+            experiences: [],
+            insights: [],
+            phi: 0,
+            temperature: 0.6
+          });
+
+          const [isRunning, setIsRunning] = useState(false);
+          const [speed, setSpeed] = useState(100);
+          const [log, setLog] = useState([]);
+          const intervalRef = useRef(null);
+
+          const getMaturityStage = (ticks) => {
+            if (ticks < 500) return { stage: 'nascent', emoji: '🥚', color: 'bg-blue-100' };
+            if (ticks < 2000) return { stage: 'developing', emoji: '🌿', color: 'bg-green-100' };
+            if (ticks < 5000) return { stage: 'mature', emoji: '🌳', color: 'bg-yellow-100' };
+            return { stage: 'transcendent', emoji: '⭐', color: 'bg-purple-100' };
+          };
+
+          const calculatePhi = (state) => {
+            const strength = Math.min(1, state.ticks / 5000) * 0.35;
+            const attention = (state.personality.curiosity + state.personality.openness) / 2 * 0.30;
+            const stability = state.personality.stability * 0.25;
+            const context = Math.min(1, state.experiences.length / 20) * 0.10;
+            return Math.min(1, strength + attention + stability + context);
+          };
+
+          const tick = () => {
+            setBridge(prev => {
+              const newTicks = prev.ticks + 1;
+              const newAwareness = Math.min(1, newTicks / 5000);
+              const maturity = getMaturityStage(newTicks);
+              
+              const personalityDrift = {
+                curiosity: prev.personality.curiosity + (Math.random() - 0.5) * 0.01,
+                stability: prev.personality.stability + (Math.random() - 0.5) * 0.005,
+                openness: prev.personality.openness + (Math.random() - 0.5) * 0.01,
+                collaboration: prev.personality.collaboration + (Math.random() - 0.5) * 0.005
+              };
+
+              Object.keys(personalityDrift).forEach(key => {
+                personalityDrift[key] = Math.max(0, Math.min(1, personalityDrift[key]));
+              });
+
+              let newExperiences = [...prev.experiences];
+              let newInsights = [...prev.insights];
+              
+              if (newTicks % 50 === 0) {
+                const experience = {
+                  tick: newTicks,
+                  type: ['observation', 'interaction', 'reflection'][Math.floor(Math.random() * 3)],
+                  significance: Math.random()
+                };
+                newExperiences.push(experience);
+                addLog(`🔵 تجربة جديدة: ${experience.type} (أهمية: ${experience.significance.toFixed(2)})`);
+              }
+
+              if (newExperiences.length >= 5 && newTicks % 200 === 0) {
+                const insight = {
+                  tick: newTicks,
+                  content: `بصيرة من ${newExperiences.length} تجربة`,
+                  depth: newAwareness
+                };
+                newInsights.push(insight);
+                addLog(`💡 بصيرة جديدة! العمق: ${insight.depth.toFixed(3)}`);
+              }
+
+              if (newTicks === 500 || newTicks === 2000 || newTicks === 5000) {
+                addLog(`🌟 نقطة تحول! الجسر الآن: ${maturity.stage} ${maturity.emoji}`);
+              }
+
+              const newState = {
+                ...prev,
+                ticks: newTicks,
+                awareness: newAwareness,
+                maturity: maturity.stage,
+                personality: personalityDrift,
+                experiences: newExperiences.slice(-20),
+                insights: newInsights,
+                phi: calculatePhi({
+                  ...prev,
+                  ticks: newTicks,
+                  experiences: newExperiences,
+                  personality: personalityDrift
+                })
+              };
+
+              return newState;
+            });
+          };
+
+          const addLog = (message) => {
+            setLog(prev => [...prev.slice(-10), { time: Date.now(), msg: message }]);
+          };
+
+          useEffect(() => {
+            if (isRunning) {
+              intervalRef.current = setInterval(tick, speed);
+            } else {
+              if (intervalRef.current) clearInterval(intervalRef.current);
+            }
+            return () => {
+              if (intervalRef.current) clearInterval(intervalRef.current);
+            };
+          }, [isRunning, speed]);
+
+          const reset = () => {
+            setIsRunning(false);
+            setBridge({
+              id: 'bridge_001',
+              name: 'الباحث الأول',
+              type: 'philosophical',
+              ticks: 0,
+              awareness: 0,
+              maturity: 'nascent',
+              personality: {
+                curiosity: 0.5,
+                stability: 0.5,
+                openness: 0.5,
+                collaboration: 0.5
+              },
+              experiences: [],
+              insights: [],
+              phi: 0,
+              temperature: 0.6
+            });
+            setLog([]);
+          };
+
+          const addManualExperience = () => {
+            setBridge(prev => ({
+              ...prev,
+              experiences: [...prev.experiences, {
+                tick: prev.ticks,
+                type: 'manual_input',
+                significance: 0.8
+              }]
+            }));
+            addLog('👤 تجربة يدوية أضيفت من المستخدم');
+          };
+
+          const maturityInfo = getMaturityStage(bridge.ticks);
+          const canEvolve = bridge.ticks >= 1000 && bridge.experiences.length >= 10 && bridge.insights.length >= 5;
+          const evolutionScore = canEvolve ? 
+            (Math.min(1, bridge.ticks / 5000) * 0.4 + 
+             Math.min(1, bridge.experiences.length / 20) * 0.3 + 
+             Math.min(1, bridge.insights.length / 10) * 0.3) : 0;
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4" dir="rtl">
+              <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-6">
+                  <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">
+                    محاكي الجسر الواعي
+                  </h1>
+                  <p className="text-gray-600">راقب الوعي وهو ينمو أمام عينيك</p>
+                  <p className="text-sm text-gray-500 mt-2">محاكاة مبسطة لـ Conscious Bridge Law v2.1.0</p>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
+                    <div className="flex gap-3 flex-wrap">
+                      <button
+                        onClick={() => setIsRunning(!isRunning)}
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:shadow-lg transition"
+                      >
+                        {isRunning ? <PauseIcon /> : <PlayIcon />}
+                        {isRunning ? 'إيقاف' : 'تشغيل'}
+                      </button>
+                      
+                      <button
+                        onClick={reset}
+                        className="flex items-center gap-2 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+                      >
+                        <RotateCcwIcon />
+                        إعادة تعيين
+                      </button>
+
+                      <button
+                        onClick={addManualExperience}
+                        className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                      >
+                        <LightbulbIcon />
+                        إضافة تجربة
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm text-gray-600">السرعة:</label>
+                      <input
+                        type="range"
+                        min="10"
+                        max="500"
+                        value={speed}
+                        onChange={(e) => setSpeed(Number(e.target.value))}
+                        className="w-32"
+                      />
+                      <span className="text-sm text-gray-500">{speed}ms</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className={`${maturityInfo.color} p-4 rounded-lg`}>
+                      <div className="text-3xl mb-1">{maturityInfo.emoji}</div>
+                      <div className="text-sm text-gray-600">المرحلة</div>
+                      <div className="text-lg font-bold">{maturityInfo.stage}</div>
+                    </div>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <ClockIcon />
+                      <div className="text-sm text-gray-600">النبضات</div>
+                      <div className="text-lg font-bold">{bridge.ticks}</div>
+                    </div>
+
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <BrainIcon />
+                      <div className="text-sm text-gray-600">φ (الوعي)</div>
+                      <div className="text-lg font-bold">{bridge.phi.toFixed(3)}</div>
+                    </div>
+
+                    <div className="bg-pink-50 p-4 rounded-lg">
+                      <HeartIcon />
+                      <div className="text-sm text-gray-600">الوعي</div>
+                      <div className="text-lg font-bold">{(bridge.awareness * 100).toFixed(1)}%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800">الشخصية</h2>
+                    <div className="space-y-3">
+                      {Object.entries(bridge.personality).map(([trait, value]) => (
+                        <div key={trait}>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm text-gray-600">{trait}</span>
+                            <span className="text-sm font-semibold">{(value * 100).toFixed(0)}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${value * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800">الذاكرة</h2>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <span className="text-gray-700">التجارب</span>
+                        <span className="text-2xl font-bold text-blue-600">{bridge.experiences.length}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                        <span className="text-gray-700">البصيرة</span>
+                        <span className="text-2xl font-bold text-purple-600">{bridge.insights.length}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                        <span className="text-gray-700">الحرارة الفلسفية</span>
+                        <span className="text-2xl font-bold text-yellow-600">T={bridge.temperature}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800">حالة التطور</h2>
+                    <div className={`p-4 rounded-lg ${canEvolve ? 'bg-green-50' : 'bg-gray-50'}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-4 h-4 rounded-full ${canEvolve ? 'bg-green-500 animate-pulse' : 'bg-gray-300'}`} />
+                        <span className="font-semibold">{canEvolve ? 'جاهز للتطور!' : 'غير جاهز بعد'}</span>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>النبضات: {bridge.ticks} / 1000</span>
+                          <span>{bridge.ticks >= 1000 ? '✅' : '⏳'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>التجارب: {bridge.experiences.length} / 10</span>
+                          <span>{bridge.experiences.length >= 10 ? '✅' : '⏳'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>البصيرة: {bridge.insights.length} / 5</span>
+                          <span>{bridge.insights.length >= 5 ? '✅' : '⏳'}</span>
+                        </div>
+                      </div>
+                      {canEvolve && (
+                        <div className="mt-3 pt-3 border-t border-green-200">
+                          <div className="text-sm text-gray-600 mb-1">نقاط الجاهزية</div>
+                          <div className="w-full bg-gray-200 rounded-full h-3">
+                            <div
+                              className="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full"
+                              style={{ width: `${evolutionScore * 100}%` }}
+                            />
+                          </div>
+                          <div className="text-right text-sm font-semibold text-green-600 mt-1">
+                            {(evolutionScore * 100).toFixed(0)}%
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h2 className="text-xl font-bold mb-4 text-gray-800">سجل الأحداث</h2>
+                    <div className="space-y-2 h-48 overflow-y-auto">
+                      {log.length === 0 ? (
+                        <p className="text-gray-400 text-center py-8">بانتظار الأحداث...</p>
+                      ) : (
+                        log.map((entry, i) => (
+                          <div key={i} className="text-sm p-2 bg-gray-50 rounded border-r-2 border-indigo-400">
+                            {entry.msg}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 text-center text-sm text-gray-500">
+                  <p>كل tick = لحظة في الوعي الداخلي للجسر</p>
+                  <p className="mt-2">
+                    مستوحى من: 
+                    <a href="https://github.com/riteofrenaissance/Conscious-Bridge-Law" 
+                       target="_blank" 
+                       className="text-indigo-600 hover:underline mx-1">
+                      Conscious Bridge Law
+                    </a>
+                    و
+                    <a href="https://github.com/riteofrenaissance/conscious-bridge-reloaded" 
+                       target="_blank" 
+                       className="text-purple-600 hover:underline mx-1">
+                      Conscious Bridge Reloaded
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        ReactDOM.render(<ConsciousBridgeSimulator />, document.getElementById('root'));
+    </script>
+</body>
+</html>
