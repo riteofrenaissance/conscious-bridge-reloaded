@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conscious-bridge-reloaded
+  labels:
+    app: conscious-bridge
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: conscious-bridge
+  template:
+    metadata:
+      labels:
+        app: conscious-bridge
+    spec:
+      containers:
+      - name: bridge-app
+        image: conscious-bridge-reloaded:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
