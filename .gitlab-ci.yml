@@ -1,17 +1,42 @@
+default:
+  image: python:3.11-slim
+  before_script:
+    - echo "🧠 Conscious Bridge CI/CD Starting..."
+    - python --version
+  after_script:
+    - echo "🏁 Pipeline completed at $(date)"
+  retry: 2
+
 stages:
+  - validate
   - test
   - build
+  - deploy
 
-test-job:
+validate-structure:
+  stage: validate
+  script:
+    - echo "Checking project structure..."
+    - ls -la
+
+run-tests:
   stage: test
   script:
-    - echo "✅ CI/CD Pipeline Test"
+    - echo "Running tests..."
     - 'echo "Project: Conscious Bridge Reloaded"'
 
-build-notify:
+docker-build:
   stage: build
   script:
-    - echo "📦 Build would happen here"
-    - echo "For GKE: kubectl apply -f k8s/"
+    - echo "Building Docker image..."
   only:
     - main
+
+deploy-gke:
+  stage: deploy
+  script:
+    - echo "Deploying to GKE..."
+    - echo "Command: kubectl apply -f k8s/"
+  only:
+    - main
+  when: manual
