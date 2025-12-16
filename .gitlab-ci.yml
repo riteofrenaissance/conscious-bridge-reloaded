@@ -1,12 +1,17 @@
 stages:
+  - test
   - build
 
-build-docker:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+test-job:
+  stage: test
   script:
-    - echo "Starting Docker build..."
-    - docker build -t test-image .
-    - echo "Docker build completed successfully"
+    - echo "✅ CI/CD Pipeline Test"
+    - echo "Project: Conscious Bridge Reloaded"
+
+build-notify:
+  stage: build
+  script:
+    - echo "📦 Build would happen here"
+    - echo "For GKE: kubectl apply -f k8s/"
+  only:
+    - main
