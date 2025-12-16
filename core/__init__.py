@@ -3,7 +3,7 @@ Core module for Conscious Bridge Reloaded
 Contains all fundamental systems
 """
 
-from .internal_clock import InternalClock, ClockEvent
+from .internal_clock import InternalClock, TemporalEvent
 from .experience_processor import ExperienceProcessor, Experience
 from .personality_core import PersonalityCore, PersonalityTraits
 from .maturity_system import MaturitySystem, MaturityStage
