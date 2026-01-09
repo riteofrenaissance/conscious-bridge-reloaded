@@ -564,7 +564,7 @@ Open a [feature request](https://github.com/riteofrenaissance/conscious-bridge-r
 MIT License
 
 Copyright (c) 2025 Conscious Bridge Team
-Under supervision of: Samir Beldi
+Under supervision of: Samir Baladi 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
